@@ -22,7 +22,11 @@ const transactions = document.querySelector("#transactions")
 let itens = localStorage.getItem("itens") ? JSON.parse(localStorage.getItem("itens")) : {};
 let cont = Object.keys(itens).length;
 
-
+// Receita e despesas 
+const money_plus = document.querySelector("#money-plus")
+let valor_plus = 0;
+const money_minus = document.querySelector("#money-minus")
+let valor_minus = 0;
 
 btn_submit.addEventListener('click',(event)=>{
     event.preventDefault();
@@ -61,6 +65,9 @@ function criaBotao(itensLocal,val) {
             const pai  =  button.parentNode
             
             delete itensLocal[pai.id]
+            if( pai.classList.toString() == "plus") money_plus.textContent = "R$ "+(valor_plus -val).toFixed(2)
+            if( pai.classList.toString() == "minus") money_minus.textContent = "R$ "+(valor_minus +val).toFixed(2)
+            
             pai.remove()
             valor += val*(-1)
             balance.textContent = valor.toFixed(2);
@@ -76,11 +83,17 @@ function criaLi(itensLocal,elemento) {
     const li = document.createElement("li")
     li.id = itensLocal[elemento]["id"]
     if(itensLocal[elemento]["valor"]>0){
+        valor_plus +=  parseFloat( itensLocal[elemento]["valor"])
+      
+        money_plus.textContent =   "R$ "+(valor_plus).toFixed(2)
         li.classList.add("plus")
         li.innerHTML = itensLocal[elemento]["nome"] + `<span>${itensLocal[elemento]["valor"]}</span> `
        
     }else{
+        valor_minus += (itensLocal[elemento]["valor"]*-1)
         li.classList.add("minus")
+        money_minus.textContent =   "R$ "+(valor_minus).toFixed(2)
+        
         li.innerHTML = itensLocal[elemento]["nome"] + `<span>${itensLocal[elemento]["valor"]}</span> `
        
     }
